@@ -1,4 +1,4 @@
-name: TikDown
+name: TikTik Downloader
 options:
   bundleIdPrefix: com.nadet
   deploymentTarget:
@@ -7,7 +7,7 @@ options:
 
 settings:
   base:
-    PRODUCT_NAME: TikDown
+    PRODUCT_NAME: TikTok Downloader
     MARKETING_VERSION: 1.0.0
     CURRENT_PROJECT_VERSION: 1
     SWIFT_VERSION: 5.9
@@ -23,15 +23,15 @@ targets:
     info:
       path: Sources/Info.plist
       properties:
-        CFBundleName: TikDown
-        CFBundleDisplayName: TikDown
+        CFBundleName: TikTok Downloader
+        CFBundleDisplayName: TikTok Downloader
         CFBundleIdentifier: com.nadet.tiktokdownloader
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         UILaunchStoryboardName: ""
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
-        NSPhotoLibraryAddUsageDescription: "TikDown needs Photos access to save downloaded videos."
+        NSPhotoLibraryAddUsageDescription: "TikTok Downloader needs Photos access to save downloaded videos."
         LSApplicationQueriesSchemes:
           - tiktok
     settings:
