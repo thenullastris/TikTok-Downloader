@@ -1,0 +1,40 @@
+name: TikDown
+options:
+  bundleIdPrefix: site.KhinPhunnadet
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15"
+
+settings:
+  base:
+    PRODUCT_NAME: TikDown
+    MARKETING_VERSION: 1.0.0
+    CURRENT_PROJECT_VERSION: 1
+    SWIFT_VERSION: 5.9
+    IPHONEOS_DEPLOYMENT_TARGET: 16.0
+    TARGETED_DEVICE_FAMILY: 1  # iPhone only
+
+targets:
+  TikDown:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleName: TikDown
+        CFBundleDisplayName: TikDown
+        CFBundleIdentifier: site.KhinPhunnadet.TikDown
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        UILaunchStoryboardName: ""
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSPhotoLibraryAddUsageDescription: "TikDown needs Photos access to save downloaded videos."
+        LSApplicationQueriesSchemes:
+          - tiktok
+    settings:
+      base:
+        CODE_SIGNING_ALLOWED: NO
+        ENABLE_BITCODE: NO
