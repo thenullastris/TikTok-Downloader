@@ -25,7 +25,7 @@ targets:
       properties:
         CFBundleName: TikDown
         CFBundleDisplayName: TikDown
-        CFBundleIdentifier: site.KhinPhunnadet.TikDown
+        CFBundleIdentifier: com.nadet.tiktokdownloader
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         UILaunchStoryboardName: ""
