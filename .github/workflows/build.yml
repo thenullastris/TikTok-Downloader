@@ -11,41 +11,45 @@ on:
 jobs:
   build:
     name: Build IPA
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@main
 
-      - name: Install XcodeGen
-        run: brew install xcodegen
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@master
+        with:
+          xcode-version: '16.3'
+
+      - name: Install build tools
+        run: brew install xcodegen ldid
 
       - name: Generate Xcode project
         run: xcodegen generate
 
-      - name: Build Archive
+      - name: Build app (unsigned)
         run: |
-          xcodebuild archive \
+          set -o pipefail
+          xcodebuild build \
             -project TikDown.xcodeproj \
             -scheme TikDown \
             -sdk iphoneos \
             -configuration Release \
-            -archivePath "$RUNNER_TEMP/TikDown.xcarchive" \
+            -derivedDataPath "$RUNNER_TEMP/DerivedData" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            | xcpretty
+            CODE_SIGN_IDENTITY=""
 
-      # Debug: show what's actually inside the archive
-      - name: List xcarchive contents
-        run: find "$RUNNER_TEMP/TikDown.xcarchive" -type d | head -30
-
-      - name: Package IPA (unsigned)
+      - name: Fakesign & package IPA
         run: |
-          # Find .app wherever it actually landed
-          APP_PATH=$(find "$RUNNER_TEMP/TikDown.xcarchive" -name "*.app" -type d | head -1)
+          APP_PATH=$(find "$RUNNER_TEMP/DerivedData" -name "*.app" -type d | head -1)
           echo "App found at: $APP_PATH"
 
+          # Fakesign with ldid (same as Zenith)
+          ldid -S "$APP_PATH/$(basename $APP_PATH .app)"
+
+          # Package into IPA
           mkdir -p "$RUNNER_TEMP/IPA/Payload"
           cp -r "$APP_PATH" "$RUNNER_TEMP/IPA/Payload/"
           cd "$RUNNER_TEMP/IPA"
@@ -53,15 +57,8 @@ jobs:
           echo "IPA_PATH=$RUNNER_TEMP/IPA/TikDown-unsigned.ipa" >> $GITHUB_ENV
 
       - name: Upload IPA
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@main
         with:
-          name: TikDown-v${{ github.event.inputs.version }}-unsigned
+          name: site.KhinPhunnadet.TikDown-v${{ github.event.inputs.version }}-ios.ipa
           path: ${{ env.IPA_PATH }}
-          retention-days: 30
-
-      - name: Upload dSYM
-        uses: actions/upload-artifact@v4
-        with:
-          name: TikDown-v${{ github.event.inputs.version }}-dSYM
-          path: ${{ runner.temp }}/TikDown.xcarchive/dSYMs
           retention-days: 30
