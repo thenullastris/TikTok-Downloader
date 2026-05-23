@@ -11,22 +11,18 @@ on:
 jobs:
   build:
     name: Build IPA
-    runs-on: macos-14  # Apple Silicon runner, faster
+    runs-on: macos-14
 
     steps:
-      # ── 1. Checkout ──────────────────────────────────────────────
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # ── 2. Install XcodeGen ──────────────────────────────────────
       - name: Install XcodeGen
         run: brew install xcodegen
 
-      # ── 3. Generate .xcodeproj from project.yml ──────────────────
       - name: Generate Xcode project
         run: xcodegen generate
 
-      # ── 4. Build (unsigned) ──────────────────────────────────────
       - name: Build Archive
         run: |
           xcodebuild archive \
@@ -40,17 +36,22 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             | xcpretty
 
-      # ── 5. Package into unsigned IPA ─────────────────────────────
+      # Debug: show what's actually inside the archive
+      - name: List xcarchive contents
+        run: find "$RUNNER_TEMP/TikDown.xcarchive" -type d | head -30
+
       - name: Package IPA (unsigned)
         run: |
+          # Find .app wherever it actually landed
+          APP_PATH=$(find "$RUNNER_TEMP/TikDown.xcarchive" -name "*.app" -type d | head -1)
+          echo "App found at: $APP_PATH"
+
           mkdir -p "$RUNNER_TEMP/IPA/Payload"
-          cp -r "$RUNNER_TEMP/TikDown.xcarchive/Products/Applications/TikDown.app" \
-                "$RUNNER_TEMP/IPA/Payload/"
+          cp -r "$APP_PATH" "$RUNNER_TEMP/IPA/Payload/"
           cd "$RUNNER_TEMP/IPA"
           zip -r TikDown-unsigned.ipa Payload
           echo "IPA_PATH=$RUNNER_TEMP/IPA/TikDown-unsigned.ipa" >> $GITHUB_ENV
 
-      # ── 6. Upload IPA artifact ───────────────────────────────────
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
@@ -58,7 +59,6 @@ jobs:
           path: ${{ env.IPA_PATH }}
           retention-days: 30
 
-      # ── 7. Upload dSYM for crash symbolication (optional) ────────
       - name: Upload dSYM
         uses: actions/upload-artifact@v4
         with:
