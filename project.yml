@@ -1,6 +1,6 @@
 name: TikDown
 options:
-  bundleIdPrefix: site.KhinPhunnadet
+  bundleIdPrefix: com.nadet
   deploymentTarget:
     iOS: "16.0"
   xcodeVersion: "15"
