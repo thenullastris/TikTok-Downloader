@@ -53,8 +53,8 @@ jobs:
           mkdir -p "$RUNNER_TEMP/IPA/Payload"
           cp -r "$APP_PATH" "$RUNNER_TEMP/IPA/Payload/"
           cd "$RUNNER_TEMP/IPA"
-          zip -r TikDown-unsigned.ipa Payload
-          echo "IPA_PATH=$RUNNER_TEMP/IPA/TikDown-unsigned.ipa" >> $GITHUB_ENV
+          zip -r com.nadet.tiktokdownloader.ipa Payload
+          echo "IPA_PATH=$RUNNER_TEMP/IPA/com.nadet.tiktokdownloader.ipa" >> $GITHUB_ENV
 
       - name: Upload IPA
         uses: actions/upload-artifact@main
