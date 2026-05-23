@@ -178,13 +178,16 @@ struct HeaderView: View {
                     .font(.system(size: 32))
                     .foregroundStyle(LinearGradient(colors: [Color(hex: "FF2D55"), Color(hex: "FF6B9D")],
                                                    startPoint: .topLeading, endPoint: .bottomTrailing))
-                Text("TikDown")
-                    .font(.system(size: 34, weight: .black, design: .rounded))
+                Text("TikTok Downloader")
+                    .font(.system(size: 28, weight: .black, design: .rounded))
                     .foregroundColor(.white)
             }
             Text("Save TikToks without watermark")
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.white.opacity(0.5))
+            Text("by Khin Phunnadet")
+                .font(.system(size: 12, weight: .regular))
+                .foregroundColor(.white.opacity(0.25))
         }
         .padding(.top, 8)
     }
